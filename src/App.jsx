@@ -1539,7 +1539,7 @@ function VerificationBanner({user,token,notify}){
   </div>;
 }
 
-function DetailModal({listing:l,user,token,onClose,onShare,onChat,onLockIn,onUnlock,onEscrow,notify}){
+function DetailModal({listing:l,user,token,onClose,onShare,onChat,onLockIn,onUnlock,notify}){
   const isSeller=user?.id===l.seller_id;
   const isBuyer=user?.id===l.locked_buyer_id;
   const photos=Array.isArray(l.photos)?l.photos.map(p=>typeof p==="string"?p:p?.url).filter(Boolean):[];
@@ -1553,7 +1553,6 @@ function DetailModal({listing:l,user,token,onClose,onShare,onChat,onLockIn,onUnl
       {user&&!isSeller&&<button className="btn bs sm" onClick={onChat}>💬 Chat with Seller</button>}
       {isSeller&&<button className="btn bs sm" onClick={onChat}>💬 View Messages</button>}
       {!isSeller&&l.status==="active"&&!l.locked_buyer_id&&user&&<button className="btn bg2 sm" onClick={onLockIn}>🔥 I'm Interested — Lock In</button>}
-      {!isSeller&&l.status==="active"&&user&&<button className="btn bs sm" onClick={onEscrow}>🔐 Buy with Escrow</button>}
       {isSeller&&l.locked_buyer_id&&!l.is_unlocked&&<button className="btn bp" style={{flex:1}} onClick={onUnlock}>🔓 Pay KSh 250 to See Buyer Contact</button>}
       {!user&&<button className="btn bp" onClick={()=>{setModal({type:"auth",mode:"login"});}}>Sign In to Contact Seller</button>}
     </div>
@@ -4132,7 +4131,6 @@ export default function App(){
       onChat={()=>{if(!user){notify("Sign in to chat","warning");setModal({type:"auth",mode:"login"});return;}setModal({type:"chat",listing:modal.listing});}}
       onLockIn={()=>handleLockIn(modal.listing)}
       onUnlock={()=>setModal({type:"pay",payType:"unlock",listing:modal.listing})}
-      onEscrow={()=>{if(!user){notify("Sign in first","warning");setModal({type:"auth",mode:"login"});return;}setModal({type:"pay",payType:"escrow",listing:modal.listing});}}
     />}
     {modal?.type==="chat"&&user&&<ChatModal listing={modal.listing} user={user} token={token} onClose={closeModal} notify={notify}/>}
     {modal?.type==="share"&&<ShareModal listing={modal.listing} onClose={closeModal}/>}
@@ -4412,7 +4410,6 @@ export default function App(){
       onChat={()=>{if(!user){notify("Sign in to chat","warning");setModal({type:"auth",mode:"login"});return;}setModal({type:"chat",listing:modal.listing});}}
       onLockIn={()=>handleLockIn(modal.listing)}
       onUnlock={()=>setModal({type:"pay",payType:"unlock",listing:modal.listing})}
-      onEscrow={()=>{if(!user){notify("Sign in first","warning");setModal({type:"auth",mode:"login"});return;}setModal({type:"pay",payType:"escrow",listing:modal.listing});}}
     />}
     {modal?.type==="chat"&&user&&<ChatModal listing={modal.listing} user={user} token={token} onClose={closeModal} notify={notify}/>}
     {modal?.type==="share"&&<ShareModal listing={modal.listing} onClose={closeModal}/>}
